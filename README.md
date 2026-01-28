@@ -1,5 +1,7 @@
 # HIV Peer Support Platform - Wireframes
 
+> App for helping HIV people to have support
+
 ## Overview
 Low-fidelity wireframes for an anonymous peer support platform for people diagnosed with HIV in Costa Rica. Focus on emotional accompaniment, safety, and trauma-informed design.
 
