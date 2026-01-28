@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIV Peer Support Platform - Interactive Prototype</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #e8e8e8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container for wireframe display */
+        .wireframe-container {
+            max-width: 375px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #333;
+            min-height: 667px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Screen base styles */
+        .screen {
+            display: none;
+            padding: 20px;
+            min-height: 667px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header with language selector */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+
+        .language-selector {
+            padding: 8px 12px;
+            border: 1px solid #666;
+            background: #f9f9f9;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* Typography */
+        .headline {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            color: #222;
+        }
+
+        .subtext {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 15px;
+            border: 2px solid #333;
+            background: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #555;
+            border-color: #555;
+        }
+
+        .btn-secondary {
+            background: #fff;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-large {
+            padding: 24px 20px;
+            font-size: 18px;
+        }
+
+        /* Trust elements / Info boxes */
+        .trust-elements {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .trust-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .trust-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .trust-item-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .trust-item-text {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Disclaimer box */
+        .disclaimer {
+            background: #f0f0f0;
+            border: 1px solid #999;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .disclaimer strong {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .disclaimer-red {
+            background: #fff5f5;
+            border-color: #cc0000;
+        }
+
+        /* Onboarding steps */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .step {
+            width: 60px;
+            height: 4px;
+            background: #ddd;
+        }
+
+        .step.active {
+            background: #333;
+        }
+
+        /* Radio options */
+        .options {
+            margin: 20px 0;
+        }
+
+        .option {
+            padding: 15px;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+            cursor: pointer;
+            background: #fff;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: #666;
+        }
+
+        .option.selected {
+            border-color: #333;
+            background: #f9f9f9;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 10px;
+            min-width: 18px;
+            min-height: 18px;
+        }
+
+        /* Checkbox */
+        .checkbox-container {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        .checkbox-container label {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            min-width: 18px;
+            min-height: 18px;
+        }
+
+        /* Chat interface */
+        .chat-header {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: -20px -20px 20px -20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .chat-header-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .chat-header-subtitle {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .chat-messages {
+            height: 350px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #fafafa;
+            border: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+
+        .message-peer {
+            background: #e5e5e5;
+            padding: 10px 12px;
+            border-radius: 4px;
+        }
+
+        .message-user {
+            background: #333;
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin-left: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #333;
+            font-size: 16px;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            background: #333;
+            color: #fff;
+            border: 2px solid #333;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .chat-actions {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .chat-action-link {
+            color: #666;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .chat-action-link:hover {
+            color: #333;
+        }
+
+        /* FAQ / Info screen */
+        .faq-item {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #222;
+        }
+
+        .faq-answer {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .external-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: #333;
+            text-decoration: underline;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Empty state / failure state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: #e5e5e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: #999;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        /* Back button */
+        .back-button {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: none;
+            background: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #333;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            color: #666;
+        }
+
+        /* Content sections */
+        .content-section {
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .content-text {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Peer list */
+        .peer-list {
+            margin: 20px 0;
+        }
+
+        .peer-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border: 2px solid #ddd;
+            margin-bottom: 12px;
+            cursor: pointer;
+            background: #fff;
+            transition: all 0.2s;
+        }
+
+        .peer-item:hover {
+            border-color: #333;
+            background: #f9f9f9;
+        }
+
+        .peer-avatar {
+            width: 50px;
+            height: 50px;
+            background: #e5e5e5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .peer-info {
+            flex: 1;
+        }
+
+        .peer-username {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+            color: #222;
+        }
+
+        .peer-details {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .peer-status {
+            font-size: 12px;
+            color: #4CAF50;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4CAF50;
+            border-radius: 50%;
+        }
+
+        .filter-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #999;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        /* Utility */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-40 {
+            margin-top: 40px;
+        }
+
+        .mt-60 {
+            margin-top: 60px;
+        }
+
+        .mb-20 {
+            margin-bottom: 20px;
+        }
+
+        /* Home icon button */
+        .home-icon {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 100;
+            color: #666;
+        }
+
+        .home-icon:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Wireframe Container -->
+    <div class="wireframe-container">
+        
+        <!-- SCREEN 1: Landing Page -->
+        <div class="screen active" id="landing">
+            <div class="header">
+                <select class="language-selector">
+                    <option>EN</option>
+                    <option>ES</option>
+                </select>
+            </div>
+
+            <div class="mt-60">
+                <h1 class="headline">You're not alone in this</h1>
+                <p class="subtext">A safe and anonymous space where people living with HIV share experiences and support each other.</p>
+
+                <button class="btn btn-primary btn-large" onclick="navigate('urgent-support')">Talk to someone now</button>
+                <button class="btn btn-secondary" onclick="navigate('onboarding-1')">What is this platform?</button>
+                <button class="btn btn-secondary" onclick="navigate('check-message')">Check offline message</button>
+            </div>
+
+            <div class="trust-elements">
+                <div class="trust-item">
+                    <div class="trust-item-title">🔒 100% Anonymous</div>
+                    <div class="trust-item-text">No real names or personal information required.</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-item-title">👥 Moderated and Safe</div>
+                    <div class="trust-item-text">Conversations monitored for your safety.</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-item-title">⚕️ Not medical advice</div>
+                    <div class="trust-item-text">We share experiences, not diagnoses or treatments.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: Onboarding Step 1 -->
+        <div class="screen" id="onboarding-1">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="step-indicator">
+                <div class="step active"></div>
+                <div class="step"></div>
+                <div class="step"></div>
+                <div class="step"></div>
+            </div>
+
+            <h2 class="headline">Select your language</h2>
+            <p class="subtext">Choose the language you're most comfortable with.</p>
+
+            <div class="options">
+                <div class="option" onclick="selectOption(this)">
+                    <input type="radio" name="language">
+                    <strong>English</strong>
+                </div>
+                <div class="option selected" onclick="selectOption(this)">
+                    <input type="radio" name="language" checked>
+                    <strong>Español</strong>
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('onboarding-2')">Continue</button>
+        </div>
+
+        <!-- SCREEN 3: Onboarding Step 2 -->
+        <div class="screen" id="onboarding-2">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="step-indicator">
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step"></div>
+                <div class="step"></div>
+            </div>
+
+            <h2 class="headline">What is this platform?</h2>
+            
+            <div class="content-section">
+                <div class="content-title">✓ What we ARE:</div>
+                <div class="content-text">
+                    • A space for emotional support<br>
+                    • People living with HIV sharing experiences<br>
+                    • Professionally validated information
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="content-title">✗ What we ARE NOT:</div>
+                <div class="content-text">
+                    • We don't provide diagnoses or medical prescriptions<br>
+                    • We are not a public social network<br>
+                    • We don't share profiles or identities
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('onboarding-3')">Understood, continue</button>
+            <button class="btn btn-secondary" onclick="navigate('onboarding-1')">Back</button>
+        </div>
+
+        <!-- SCREEN 4: Onboarding Step 3 -->
+        <div class="screen" id="onboarding-3">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="step-indicator">
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step"></div>
+            </div>
+
+            <h2 class="headline">Help us understand your situation</h2>
+            <p class="subtext">This is optional, but helps us connect you better.</p>
+
+            <div class="content-section">
+                <div class="label">Your current situation:</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="situation">
+                        Recent diagnosis (less than 6 months)
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="situation">
+                        Living with HIV
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="situation">
+                        Prefer not to specify
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="label">What do you need today?</div>
+                <div class="options">
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="need">
+                        Talk to someone who understands
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="need">
+                        Basic information about HIV
+                    </div>
+                    <div class="option" onclick="selectOption(this)">
+                        <input type="radio" name="need">
+                        Emotional support
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('onboarding-4')">Continue</button>
+            <button class="btn btn-secondary" onclick="navigate('onboarding-2')">Back</button>
+        </div>
+
+        <!-- SCREEN 5: Onboarding Step 4 -->
+        <div class="screen" id="onboarding-4">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="step-indicator">
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step active"></div>
+                <div class="step active"></div>
+            </div>
+
+            <h2 class="headline">Consent and Agreement</h2>
+            
+            <div class="disclaimer">
+                <strong>Important:</strong>
+                This platform connects people who share lived experiences. It does not replace professional medical care.
+            </div>
+
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox">
+                    <span>I understand this platform is for emotional support, not medical advice.</span>
+                </label>
+            </div>
+
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox">
+                    <span>I agree to keep conversations respectful and not share personally identifiable information.</span>
+                </label>
+            </div>
+
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox">
+                    <span>I understand conversations are moderated for everyone's safety.</span>
+                </label>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('urgent-support')">Accept and continue</button>
+            <button class="btn btn-secondary" onclick="navigate('onboarding-3')">Back</button>
+        </div>
+
+        <!-- SCREEN 6: Urgent Support -->
+        <div class="screen" id="urgent-support">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+            
+            <div class="header">
+                <select class="language-selector">
+                    <option>EN</option>
+                    <option>ES</option>
+                </select>
+            </div>
+
+            <h2 class="headline">Immediate Support</h2>
+            <p class="subtext">Browse available peer volunteers and choose who you'd like to talk to.</p>
+
+            <button class="btn btn-primary btn-large" style="margin-top: 40px;" onclick="navigate('browse-peers')">Browse available peers</button>
+
+            <div class="content-section mt-40">
+                <div class="content-title">What will happen?</div>
+                <div class="content-text">
+                    1. You'll see a list of available peer volunteers<br>
+                    2. Choose someone based on their profile info<br>
+                    3. Start a 1:1 anonymous conversation<br>
+                    4. You can end the conversation at any time
+                </div>
+            </div>
+
+            <div class="disclaimer mt-40">
+                <strong>Remember:</strong>
+                Peers share personal experiences, not medical recommendations. For professional care, contact CCSS or your doctor.
+            </div>
+
+            <button class="btn btn-secondary mt-40" onclick="navigate('faq')">View general information</button>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#" onclick="event.preventDefault(); navigate('crisis');" style="color: #666; text-decoration: underline; font-size: 14px;">Crisis resources & emergency help</a>
+            </div>
+        </div>
+
+        <!-- SCREEN 7: Browse Peers -->
+        <div class="screen" id="browse-peers">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('urgent-support')">← Back</button>
+
+            <h2 class="headline">Available Peers</h2>
+            <p class="subtext">Choose someone to connect with based on their profile.</p>
+
+            <div class="filter-section">
+                <div class="label">Filter by:</div>
+                <div class="filter-row">
+                    <select class="filter-select">
+                        <option>All provinces</option>
+                        <option>San José</option>
+                        <option>Alajuela</option>
+                        <option>Cartago</option>
+                        <option>Heredia</option>
+                        <option>Guanacaste</option>
+                        <option>Puntarenas</option>
+                        <option>Limón</option>
+                    </select>
+                    <select class="filter-select">
+                        <option>All ages</option>
+                        <option>18-25</option>
+                        <option>26-35</option>
+                        <option>36-45</option>
+                        <option>46+</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="peer-list">
+                <div class="peer-item" onclick="selectPeer('Luna27'); navigate('chat')">
+                    <div class="peer-avatar">🌙</div>
+                    <div class="peer-info">
+                        <div class="peer-username">Luna27</div>
+                        <div class="peer-details">27 years old • San José</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+
+                <div class="peer-item" onclick="selectPeer('Esperanza_CR'); navigate('chat')">
+                    <div class="peer-avatar">🦋</div>
+                    <div class="peer-info">
+                        <div class="peer-username">Esperanza_CR</div>
+                        <div class="peer-details">34 years old • Heredia</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+
+                <div class="peer-item" onclick="selectPeer('Carlos_Tico'); navigate('chat')">
+                    <div class="peer-avatar">🌊</div>
+                    <div class="peer-info">
+                        <div class="peer-username">Carlos_Tico</div>
+                        <div class="peer-details">41 years old • Puntarenas</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+
+                <div class="peer-item" onclick="selectPeer('Mariposa88'); navigate('chat')">
+                    <div class="peer-avatar">🌸</div>
+                    <div class="peer-info">
+                        <div class="peer-username">Mariposa88</div>
+                        <div class="peer-details">29 years old • Alajuela</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+
+                <div class="peer-item" onclick="selectPeer('SolCaribe'); navigate('chat')">
+                    <div class="peer-avatar">☀️</div>
+                    <div class="peer-info">
+                        <div class="peer-username">SolCaribe</div>
+                        <div class="peer-details">38 years old • Limón</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+
+                <div class="peer-item" onclick="selectPeer('Pacifico_Azul'); navigate('chat')">
+                    <div class="peer-avatar">🌴</div>
+                    <div class="peer-info">
+                        <div class="peer-username">Pacifico_Azul</div>
+                        <div class="peer-details">45 years old • Guanacaste</div>
+                        <div class="peer-status">
+                            <span class="status-dot"></span>
+                            Available now
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="disclaimer mt-40">
+                <strong>No one you'd like to talk to?</strong>
+                You can leave an offline message and a peer will respond later, or check back when more volunteers are online.
+            </div>
+
+            <button class="btn btn-secondary" onclick="navigate('offline-message')">Leave offline message</button>
+        </div>
+
+        <!-- SCREEN 8: Chat Interface -->
+        <div class="screen" id="chat">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="chat-header">
+                <div class="chat-header-title">
+                    <span id="chat-peer-name">Luna27</span> • 27, San José
+                </div>
+                <div class="chat-header-subtitle">🟢 Anonymous 1:1 conversation</div>
+            </div>
+
+            <div class="disclaimer mb-20">
+                <strong>Lived experience, not medical advice:</strong>
+                This person shares their personal experience, not treatment recommendations.
+            </div>
+
+            <div class="chat-messages">
+                <div class="message">
+                    <div class="message-peer">Hi! Thanks for reaching out. I'm here to listen without judgment. How are you feeling today?</div>
+                </div>
+                <div class="message" style="display: flex; justify-content: flex-end;">
+                    <div class="message-user">I'm scared and overwhelmed. Just got diagnosed recently.</div>
+                </div>
+                <div class="message">
+                    <div class="message-peer">I completely understand. When I received my diagnosis, I felt the same way - scared, confused, like my world was ending. Those feelings are valid.</div>
+                </div>
+                <div class="message" style="display: flex; justify-content: flex-end;">
+                    <div class="message-user">Does it get better?</div>
+                </div>
+                <div class="message">
+                    <div class="message-peer">It does. I promise you, it does. It takes time, but with support and treatment, life becomes manageable again. You're already taking an important step by reaching out.</div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" placeholder="Type your message...">
+                <button>Send</button>
+            </div>
+
+            <div class="chat-actions">
+                <span class="chat-action-link">🚩 Report</span>
+                <span class="chat-action-link" onclick="navigate('browse-peers')">← Switch peer</span>
+                <span class="chat-action-link" onclick="navigate('landing')">❌ End conversation</span>
+            </div>
+        </div>
+
+        <!-- SCREEN 9: FAQ / Information -->
+        <div class="screen" id="faq">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('urgent-support')">← Back</button>
+
+            <h2 class="headline">Basic Information</h2>
+            <p class="subtext">Professionally validated information about HIV.</p>
+
+            <div class="faq-item">
+                <div class="faq-question">What happens after an HIV diagnosis?</div>
+                <div class="faq-answer">
+                    HIV is a manageable chronic condition with treatment. With proper medical care, people with HIV live long and healthy lives.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Is treatment effective?</div>
+                <div class="faq-answer">
+                    Yes. Antiretroviral treatment (ART) is highly effective. With treatment adherence, the viral load can become undetectable, which means the virus cannot be transmitted (Undetectable = Untransmittable).
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">Where to get professional help in Costa Rica?</div>
+                <div class="faq-answer">
+                    CCSS (Caja Costarricense de Seguro Social) offers free treatment for people with HIV. You can go to your local clinic or request a referral.
+                    <a href="#" class="external-link">→ CCSS website</a>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">What is the window period?</div>
+                <div class="faq-answer">
+                    It's the time between HIV exposure and when a test can detect the virus. Generally 2-4 weeks, but can take up to 3 months in some cases.
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('urgent-support')">Talk to someone</button>
+        </div>
+
+        <!-- SCREEN 10: No Peer Available -->
+        <div class="screen" id="no-peer">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('urgent-support')">← Back</button>
+
+            <div class="empty-state">
+                <div class="empty-state-icon">⏸</div>
+                <h3 class="empty-state-title">No peers available right now</h3>
+                <p class="empty-state-text">
+                    We're sorry there's no one available at this moment. Our volunteers do their best to be present.
+                </p>
+                <p class="empty-state-text">
+                    You can leave a message and a peer will respond when available, or try other options below.
+                </p>
+
+                <button class="btn btn-primary" onclick="navigate('offline-message')">Leave an offline message</button>
+                <button class="btn btn-secondary" onclick="navigate('urgent-support')">Try again later</button>
+                <button class="btn btn-secondary" onclick="navigate('faq')">View general information</button>
+            </div>
+
+            <div class="disclaimer mt-40">
+                <strong>Need urgent help?</strong>
+                If you're in emotional crisis, contact emergency services or available help lines.
+                <div style="margin-top: 10px;">
+                    <a href="#" onclick="event.preventDefault(); navigate('crisis');" style="color: #333; text-decoration: underline; font-weight: 600;">→ View crisis resources</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 11: Offline Message -->
+        <div class="screen" id="offline-message">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('no-peer')">← Back</button>
+
+            <h2 class="headline">Leave an Offline Message</h2>
+            <p class="subtext">A peer volunteer will respond to your message when they're available. You'll be able to check back later.</p>
+
+            <div class="disclaimer mb-20">
+                <strong>Anonymous messaging:</strong>
+                Your message is completely anonymous. We'll provide you with a private code to check for responses.
+            </div>
+
+            <div class="content-section">
+                <div class="label">Your message or question:</div>
+                <textarea style="width: 100%; min-height: 150px; padding: 12px; border: 2px solid #333; font-family: inherit; font-size: 16px; resize: vertical;" placeholder="Share what's on your mind. A peer will respond with their experience and support..."></textarea>
+            </div>
+
+            <div class="content-section">
+                <div class="content-title">What happens next?</div>
+                <div class="content-text">
+                    1. Your anonymous message is sent to our peer volunteers<br>
+                    2. You'll receive a private access code<br>
+                    3. A volunteer will respond within 24-48 hours<br>
+                    4. Return with your code to read the response
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('offline-confirmation')">Send message</button>
+            <button class="btn btn-secondary" onclick="navigate('no-peer')">Cancel</button>
+        </div>
+
+        <!-- SCREEN 12: Offline Message Confirmation -->
+        <div class="screen" id="offline-confirmation">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <div class="empty-state">
+                <div class="empty-state-icon">✓</div>
+                <h3 class="empty-state-title">Message Sent</h3>
+                <p class="empty-state-text">
+                    Your message has been sent anonymously to our peer volunteers.
+                </p>
+            </div>
+
+            <div class="disclaimer" style="background: #f9f9f9; border: 2px solid #333; padding: 20px; text-align: center;">
+                <strong style="font-size: 14px; display: block; margin-bottom: 10px;">Your private access code:</strong>
+                <div style="font-size: 32px; font-weight: 700; letter-spacing: 4px; margin: 15px 0; font-family: monospace;">
+                    A7K9-M3X2
+                </div>
+                <div style="font-size: 13px; color: #666; margin-top: 10px;">
+                    Save this code to check for responses
+                </div>
+            </div>
+
+            <div class="content-section mt-40">
+                <div class="content-title">Expected response time:</div>
+                <div class="content-text">
+                    A peer volunteer will typically respond within 24-48 hours. You can return to this platform and enter your code to check for responses.
+                </div>
+            </div>
+
+            <div class="content-section">
+                <div class="content-title">How to check your response:</div>
+                <div class="content-text">
+                    1. Return to the platform homepage<br>
+                    2. Select "Check offline message"<br>
+                    3. Enter your access code<br>
+                    4. Read the peer's response
+                </div>
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('landing')">Return to home</button>
+            <button class="btn btn-secondary" onclick="navigate('faq')">View information while waiting</button>
+        </div>
+
+        <!-- SCREEN 13: Check Offline Message -->
+        <div class="screen" id="check-message">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('landing')">← Back</button>
+
+            <h2 class="headline">Check Your Message</h2>
+            <p class="subtext">Enter the access code you received to check if a peer has responded to your message.</p>
+
+            <div class="content-section">
+                <div class="label">Enter your access code:</div>
+                <input type="text" style="width: 100%; padding: 16px; border: 2px solid #333; font-size: 20px; text-align: center; letter-spacing: 3px; font-family: monospace; text-transform: uppercase;" placeholder="XXXX-XXXX" maxlength="9">
+            </div>
+
+            <button class="btn btn-primary mt-40" onclick="navigate('offline-response')">Check for response</button>
+            <button class="btn btn-secondary" onclick="navigate('landing')">Cancel</button>
+
+            <div class="disclaimer mt-40">
+                <strong>Don't have a code?</strong>
+                You receive an access code when you send an offline message. If no peers are available, you can leave a message and get a code.
+            </div>
+        </div>
+
+        <!-- SCREEN 14: Offline Response View -->
+        <div class="screen" id="offline-response">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('check-message')">← Back</button>
+
+            <h2 class="headline">Peer Response</h2>
+            <p class="subtext">A volunteer has responded to your message.</p>
+
+            <div class="disclaimer mb-20">
+                <strong>Your original message:</strong>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 15px; border-left: 4px solid #333; margin-bottom: 30px;">
+                <div style="font-size: 14px; color: #555; line-height: 1.6;">
+                    "I'm scared. I don't know what to do after my diagnosis. Does it get better?"
+                </div>
+                <div style="font-size: 12px; color: #888; margin-top: 10px;">
+                    Sent 2 days ago
+                </div>
+            </div>
+
+            <div class="disclaimer mb-20">
+                <strong>Peer volunteer response:</strong>
+            </div>
+
+            <div style="background: #fff; padding: 15px; border: 1px solid #ddd; margin-bottom: 20px;">
+                <div style="font-size: 14px; color: #555; line-height: 1.6;">
+                    Thank you for sharing. Your fear is completely valid and something many of us have felt. When I was diagnosed, I felt the same way - scared, confused, overwhelmed.
+                    <br><br>
+                    I want you to know: yes, it does get better. The first weeks and months are the hardest emotionally, but with time, treatment, and support, life becomes manageable and even full again.
+                    <br><br>
+                    Treatment today is incredibly effective. I've been undetectable for 3 years now, living a completely normal life. The fear lessens as you learn more and connect with others who understand.
+                    <br><br>
+                    Take things one day at a time. Be gentle with yourself. And know that you're not alone in this journey.
+                </div>
+                <div style="font-size: 12px; color: #888; margin-top: 15px;">
+                    — Peer volunteer • Responded 1 day ago
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('urgent-support')">Continue conversation live</button>
+            <button class="btn btn-secondary" onclick="navigate('faq')">View more information</button>
+            <button class="btn btn-secondary" onclick="navigate('landing')">Return to home</button>
+        </div>
+
+        <!-- SCREEN 15: Crisis Resources -->
+        <div class="screen" id="crisis">
+            <div class="home-icon" onclick="navigate('landing')" title="Back to home">🏠</div>
+
+            <button class="back-button" onclick="navigate('landing')">← Back</button>
+
+            <h2 class="headline">Crisis Resources</h2>
+            <p class="subtext">If you're experiencing an emotional crisis or thoughts of self-harm, these resources can help you immediately.</p>
+
+            <div class="disclaimer disclaimer-red">
+                <strong>⚠️ Immediate Emergency:</strong>
+                If you're in immediate danger, call 911
+            </div>
+
+            <div class="content-section mt-40">
+                <div class="content-title">Help Lines in Costa Rica</div>
+                <div class="faq-item">
+                    <div class="faq-question">National Psychiatric Hospital</div>
+                    <div class="faq-answer">
+                        24/7 crisis line<br>
+                        <strong>Phone: 2222-0400</strong>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Institute on Alcoholism and Drug Dependence (IAFA)</div>
+                    <div class="faq-answer">
+                        Guidance and emotional support<br>
+                        <strong>Phone: 800-4232-322</strong>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">CCSS - Comprehensive Care</div>
+                    <div class="faq-answer">
+                        Your local clinic can refer you to mental health services and psychological support.<br>
+                        <a href="#" class="external-link">→ Find your clinic</a>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-secondary mt-40" onclick="navigate('landing')">Back to home</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Store selected peer info
+        let selectedPeerInfo = {
+            username: 'Luna27',
+            age: 27,
+            province: 'San José',
+            avatar: '🌙'
+        };
+
+        // Peer data
+        const peerData = {
+            'Luna27': { username: 'Luna27', age: 27, province: 'San José', avatar: '🌙' },
+            'Esperanza_CR': { username: 'Esperanza_CR', age: 34, province: 'Heredia', avatar: '🦋' },
+            'Carlos_Tico': { username: 'Carlos_Tico', age: 41, province: 'Puntarenas', avatar: '🌊' },
+            'Mariposa88': { username: 'Mariposa88', age: 29, province: 'Alajuela', avatar: '🌸' },
+            'SolCaribe': { username: 'SolCaribe', age: 38, province: 'Limón', avatar: '☀️' },
+            'Pacifico_Azul': { username: 'Pacifico_Azul', age: 45, province: 'Guanacaste', avatar: '🌴' }
+        };
+
+        // Select peer and update chat header
+        function selectPeer(username) {
+            if (peerData[username]) {
+                selectedPeerInfo = peerData[username];
+                updateChatHeader();
+            }
+        }
+
+        // Update chat header with selected peer info
+        function updateChatHeader() {
+            const chatPeerName = document.getElementById('chat-peer-name');
+            if (chatPeerName) {
+                chatPeerName.textContent = selectedPeerInfo.username;
+            }
+            const chatHeader = document.querySelector('#chat .chat-header-title');
+            if (chatHeader) {
+                chatHeader.innerHTML = `<span id="chat-peer-name">${selectedPeerInfo.username}</span> • ${selectedPeerInfo.age}, ${selectedPeerInfo.province}`;
+            }
+        }
+
+        // Navigation function
+        function navigate(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Option selection
+        function selectOption(element) {
+            const radio = element.querySelector('input[type="radio"]');
+            if (radio) {
+                // Deselect all options in the same group
+                document.querySelectorAll(`input[name="${radio.name}"]`).forEach(r => {
+                    r.closest('.option').classList.remove('selected');
+                    r.checked = false;
+                });
+                // Select clicked option
+                radio.checked = true;
+                element.classList.add('selected');
+            }
+        }
+
+        // Optional: Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                navigate('landing');
+            }
+        });
+
+        // Check if there are peers available when clicking browse
+        document.addEventListener('DOMContentLoaded', () => {
+            const browsePeersButtons = document.querySelectorAll('button');
+            browsePeersButtons.forEach(btn => {
+                if (btn.textContent.includes('Browse available peers')) {
+                    btn.addEventListener('click', (e) => {
+                        // 10% chance to show "no peer available" for demo
+                        if (Math.random() < 0.1) {
+                            e.stopPropagation();
+                            navigate('no-peer');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
