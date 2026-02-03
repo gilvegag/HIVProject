@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIV Peer Support Platform - Bilingual Prototype</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #e8e8e8;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container for wireframe display */
+        .wireframe-container {
+            max-width: 375px;
+            width: 100%;
+            background: #fff;
+            border: 2px solid #333;
+            min-height: 667px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Screen base styles */
+        .screen {
+            display: none;
+            padding: 20px;
+            min-height: 667px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header with language selector */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 30px;
+        }
+
+        .language-selector {
+            padding: 8px 12px;
+            border: 1px solid #666;
+            background: #f9f9f9;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* Typography */
+        .headline {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            color: #222;
+        }
+
+        .subtext {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid #333;
+            background: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-primary {
+            background: #333;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #555;
+        }
+
+        .btn-small {
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        /* Trust elements */
+        .trust-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        .trust-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .trust-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Peer cards */
+        .peer-card {
+            padding: 15px;
+            border: 2px solid #ddd;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .peer-card:hover {
+            border-color: #333;
+            background: #f9f9f9;
+        }
+
+        .peer-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .peer-avatar {
+            width: 40px;
+            height: 40px;
+            background: #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 20px;
+        }
+
+        .peer-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .peer-info {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #4CAF50;
+            color: white;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        /* Info box */
+        .info-box {
+            padding: 15px;
+            background: #f5f5f5;
+            border-left: 3px solid #333;
+            margin-bottom: 20px;
+        }
+
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: #555;
+        }
+
+        /* Navigation buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-btn:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="wireframe-container">
+        
+        <!-- LANDING SCREEN -->
+        <div class="screen active" id="landing">
+            <div class="header">
+                <select class="language-selector" onchange="switchLanguage(this.value)">
+                    <option value="en">EN</option>
+                    <option value="es">ES</option>
+                </select>
+            </div>
+
+            <h1 class="headline" data-i18n="landing_title">You're not alone in this</h1>
+            <p class="subtext" data-i18n="landing_subtitle">A safe and anonymous space where people living with HIV share experiences and support each other.</p>
+
+            <button class="btn btn-primary" onclick="navigate('urgent-support')" data-i18n="landing_btn_talk">Talk to someone now</button>
+            <button class="btn" onclick="navigate('onboarding-1')" data-i18n="landing_btn_what">What is this platform?</button>
+            <button class="btn" onclick="navigate('check-message')" data-i18n="landing_btn_check">Check offline message</button>
+
+            <div class="trust-item">
+                <div class="trust-title" data-i18n="trust_anonymous">🔒 100% Anonymous</div>
+                <div class="trust-desc" data-i18n="trust_anonymous_desc">No real names or personal information required.</div>
+            </div>
+
+            <div class="trust-item">
+                <div class="trust-title" data-i18n="trust_moderated">👥 Moderated and Safe</div>
+                <div class="trust-desc" data-i18n="trust_moderated_desc">Conversations monitored for your safety.</div>
+            </div>
+
+            <div class="trust-item">
+                <div class="trust-title" data-i18n="trust_medical">⚕️ Not medical advice</div>
+                <div class="trust-desc" data-i18n="trust_medical_desc">We share experiences, not diagnoses or treatments.</div>
+            </div>
+        </div>
+
+        <!-- URGENT SUPPORT SCREEN -->
+        <div class="screen" id="urgent-support">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+            </div>
+
+            <h1 class="headline" data-i18n="urgent_title">Immediate Support</h1>
+            <p class="subtext" data-i18n="urgent_subtitle">We'll connect you anonymously with someone who has lived through similar situations.</p>
+
+            <button class="btn btn-primary" onclick="navigate('browse-peers')" data-i18n="urgent_btn_browse">Browse available peers</button>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="urgent_what_happens">What will happen?</div>
+                <div class="info-text">
+                    <div data-i18n="urgent_step1">1. We'll connect you with an available person</div>
+                    <div data-i18n="urgent_step2">2. The conversation is 1:1 and completely anonymous</div>
+                    <div data-i18n="urgent_step3">3. You can end the conversation at any time</div>
+                    <div data-i18n="urgent_step4">4. Your safety is our priority</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="urgent_remember">Remember:</div>
+                <div class="info-text" data-i18n="urgent_remember_text">Peers share personal experiences, not medical recommendations. For professional care, contact CCSS or your doctor.</div>
+            </div>
+
+            <button class="btn" onclick="navigate('faq')" data-i18n="urgent_btn_faq">View general information</button>
+            <button class="btn btn-small" onclick="navigate('crisis')" data-i18n="urgent_btn_crisis">Crisis resources & emergency help</button>
+        </div>
+
+        <!-- BROWSE PEERS SCREEN -->
+        <div class="screen" id="browse-peers">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('urgent-support')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="browse_title">Available Peers</h1>
+            <p class="subtext" data-i18n="browse_subtitle">Choose someone to connect with based on their profile.</p>
+
+            <div class="peer-card" onclick="navigate('chat')">
+                <div class="peer-header">
+                    <div class="peer-avatar">🌙</div>
+                    <div>
+                        <div class="peer-name">Luna27</div>
+                        <div class="peer-info">27 <span data-i18n="years_old">years old</span> • San José</div>
+                        <span class="badge" data-i18n="browse_available">Available now</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="peer-card" onclick="navigate('chat')">
+                <div class="peer-header">
+                    <div class="peer-avatar">🦋</div>
+                    <div>
+                        <div class="peer-name">Esperanza_CR</div>
+                        <div class="peer-info">34 <span data-i18n="years_old">years old</span> • Heredia</div>
+                        <span class="badge" data-i18n="browse_available">Available now</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="peer-card" onclick="navigate('chat')">
+                <div class="peer-header">
+                    <div class="peer-avatar">🌊</div>
+                    <div>
+                        <div class="peer-name">Carlos_Tico</div>
+                        <div class="peer-info">41 <span data-i18n="years_old">years old</span> • Puntarenas</div>
+                        <span class="badge" data-i18n="browse_available">Available now</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="browse_no_one">No one you'd like to talk to?</div>
+                <div class="info-text" data-i18n="browse_no_one_text">You can leave an offline message and a peer will respond later.</div>
+            </div>
+
+            <button class="btn" onclick="navigate('offline-message')" data-i18n="browse_btn_offline">Leave offline message</button>
+        </div>
+
+        <!-- CHAT SCREEN -->
+        <div class="screen" id="chat">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="chat_disclaimer_title">Lived experience, not medical advice:</div>
+                <div class="info-text" data-i18n="chat_disclaimer_text">This person shares their personal experience, not treatment recommendations.</div>
+            </div>
+
+            <div style="padding: 20px; background: #f9f9f9; min-height: 300px; margin-bottom: 20px;">
+                <p style="color: #888; text-align: center;" data-i18n="chat_placeholder">Chat interface would appear here</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('browse-peers')" data-i18n="chat_btn_end">End conversation</button>
+        </div>
+
+        <!-- FAQ SCREEN -->
+        <div class="screen" id="faq">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('urgent-support')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="faq_title">General Information</h1>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="faq_q1">What happens after an HIV diagnosis?</div>
+                <div class="info-text" data-i18n="faq_a1">HIV is a manageable chronic condition with treatment. With proper medical care, people with HIV live long and healthy lives.</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="faq_q2">Is treatment effective?</div>
+                <div class="info-text" data-i18n="faq_a2">Yes. Antiretroviral treatment (ART) is highly effective. With treatment adherence, the viral load can become undetectable (Undetectable = Untransmittable).</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('urgent-support')" data-i18n="faq_btn_talk">Talk to someone</button>
+        </div>
+
+        <!-- CRISIS RESOURCES SCREEN -->
+        <div class="screen" id="crisis">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('urgent-support')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="crisis_title">Crisis Resources</h1>
+            <p class="subtext" data-i18n="crisis_subtitle">If you're experiencing an emotional crisis or thoughts of self-harm, these resources can help you immediately.</p>
+
+            <div class="info-box" style="background: #ffebee; border-left-color: #d32f2f;">
+                <div class="info-title" data-i18n="crisis_emergency">⚠️ Immediate Emergency:</div>
+                <div class="info-text" data-i18n="crisis_emergency_text">If you're in immediate danger, call 911</div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="crisis_hospital">National Psychiatric Hospital</div>
+                <div class="info-text" data-i18n="crisis_hospital_desc">24/7 crisis line</div>
+                <div class="info-text"><strong>Phone: 2222-0400</strong></div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="crisis_iafa">Institute on Alcoholism and Drug Dependence (IAFA)</div>
+                <div class="info-text" data-i18n="crisis_iafa_desc">Guidance and emotional support</div>
+                <div class="info-text"><strong>Phone: 800-4232-322</strong></div>
+            </div>
+
+            <button class="btn" onclick="navigate('landing')" data-i18n="crisis_btn_home">Back to home</button>
+        </div>
+
+        <!-- OFFLINE MESSAGE SCREEN -->
+        <div class="screen" id="offline-message">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('browse-peers')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="offline_title">Leave an Offline Message</h1>
+            <p class="subtext" data-i18n="offline_subtitle">A peer volunteer will respond to your message when they're available.</p>
+
+            <div style="padding: 20px; background: #f9f9f9; min-height: 200px; margin-bottom: 20px;">
+                <p style="color: #888; text-align: center;" data-i18n="offline_placeholder">Message form would appear here</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('offline-confirmation')" data-i18n="offline_btn_send">Send message</button>
+        </div>
+
+        <!-- OFFLINE CONFIRMATION SCREEN -->
+        <div class="screen" id="offline-confirmation">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+            </div>
+
+            <div style="text-align: center; padding: 40px 0;">
+                <div style="font-size: 60px; margin-bottom: 20px;">✓</div>
+                <h1 class="headline" data-i18n="offline_confirm_title">Message Sent</h1>
+                <p class="subtext" data-i18n="offline_confirm_text">Your message has been sent anonymously to our peer volunteers.</p>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="offline_code_title">Your private access code:</div>
+                <div style="text-align: center; font-size: 24px; font-weight: bold; letter-spacing: 3px; margin: 15px 0;">A7K9-M3X2</div>
+                <div class="info-text" data-i18n="offline_code_save">Save this code to check for responses</div>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('landing')" data-i18n="offline_btn_home">Return to home</button>
+        </div>
+
+        <!-- CHECK MESSAGE SCREEN -->
+        <div class="screen" id="check-message">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="check_title">Check Your Message</h1>
+            <p class="subtext" data-i18n="check_subtitle">Enter the access code you received to check if a peer has responded to your message.</p>
+
+            <div style="padding: 20px; background: #f9f9f9; min-height: 100px; margin-bottom: 20px;">
+                <p style="color: #888; text-align: center;" data-i18n="check_placeholder">Code input would appear here</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('offline-response')" data-i18n="check_btn_check">Check for response</button>
+        </div>
+
+        <!-- OFFLINE RESPONSE SCREEN -->
+        <div class="screen" id="offline-response">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+                <button class="nav-btn" onclick="navigate('check-message')" data-i18n="btn_back">← Back</button>
+            </div>
+
+            <h1 class="headline" data-i18n="response_title">Peer Response</h1>
+            <p class="subtext" data-i18n="response_subtitle">A volunteer has responded to your message.</p>
+
+            <div style="padding: 20px; background: #f9f9f9; min-height: 200px; margin-bottom: 20px;">
+                <p style="color: #888; text-align: center;" data-i18n="response_placeholder">Response would appear here</p>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('urgent-support')" data-i18n="response_btn_continue">Continue conversation live</button>
+            <button class="btn" onclick="navigate('landing')" data-i18n="response_btn_home">Return to home</button>
+        </div>
+
+        <!-- ONBOARDING SCREEN 1 -->
+        <div class="screen" id="onboarding-1">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+            </div>
+
+            <h1 class="headline" data-i18n="onboard1_title">What is this platform?</h1>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="onboard1_are_title">✓ What we ARE:</div>
+                <div class="info-text">
+                    <div data-i18n="onboard1_are_1">• A space for emotional support</div>
+                    <div data-i18n="onboard1_are_2">• People living with HIV sharing experiences</div>
+                    <div data-i18n="onboard1_are_3">• Professionally validated information</div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="onboard1_not_title">✗ What we ARE NOT:</div>
+                <div class="info-text">
+                    <div data-i18n="onboard1_not_1">• We don't provide diagnoses or medical prescriptions</div>
+                    <div data-i18n="onboard1_not_2">• We are not a public social network</div>
+                    <div data-i18n="onboard1_not_3">• We don't share profiles or identities</div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('onboarding-2')" data-i18n="onboard1_btn">Understood, continue</button>
+        </div>
+
+        <!-- ONBOARDING SCREEN 2 (Consent) -->
+        <div class="screen" id="onboarding-2">
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="navigate('landing')" data-i18n="btn_home">🏠 Home</button>
+            </div>
+
+            <h1 class="headline" data-i18n="onboard2_title">Consent and Agreement</h1>
+
+            <div class="info-box">
+                <div class="info-title" data-i18n="onboard2_important">Important:</div>
+                <div class="info-text" data-i18n="onboard2_important_text">This platform connects people who share lived experiences. It does not replace professional medical care.</div>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: start;">
+                        <input type="checkbox" style="margin-right: 10px; margin-top: 3px;">
+                        <span data-i18n="onboard2_check1">I understand this platform is for emotional support, not medical advice.</span>
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: start;">
+                        <input type="checkbox" style="margin-right: 10px; margin-top: 3px;">
+                        <span data-i18n="onboard2_check2">I agree to keep conversations respectful and not share personally identifiable information.</span>
+                    </label>
+                </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: flex; align-items: start;">
+                        <input type="checkbox" style="margin-right: 10px; margin-top: 3px;">
+                        <span data-i18n="onboard2_check3">I understand conversations are moderated for everyone's safety.</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="navigate('urgent-support')" data-i18n="onboard2_btn">Accept and continue</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Language system with complete translations from content-guide.md
+        let currentLanguage = 'en';
+
+        const translations = {
+            en: {
+                // Landing
+                landing_title: "You're not alone in this",
+                landing_subtitle: "A safe and anonymous space where people living with HIV share experiences and support each other.",
+                landing_btn_talk: "Talk to someone now",
+                landing_btn_what: "What is this platform?",
+                landing_btn_check: "Check offline message",
+                trust_anonymous: "🔒 100% Anonymous",
+                trust_anonymous_desc: "No real names or personal information required.",
+                trust_moderated: "👥 Moderated and Safe",
+                trust_moderated_desc: "Conversations monitored for your safety.",
+                trust_medical: "⚕️ Not medical advice",
+                trust_medical_desc: "We share experiences, not diagnoses or treatments.",
+                
+                // Urgent Support
+                urgent_title: "Immediate Support",
+                urgent_subtitle: "We'll connect you anonymously with someone who has lived through similar situations.",
+                urgent_btn_browse: "Browse available peers",
+                urgent_what_happens: "What will happen?",
+                urgent_step1: "1. We'll connect you with an available person",
+                urgent_step2: "2. The conversation is 1:1 and completely anonymous",
+                urgent_step3: "3. You can end the conversation at any time",
+                urgent_step4: "4. Your safety is our priority",
+                urgent_remember: "Remember:",
+                urgent_remember_text: "Peers share personal experiences, not medical recommendations. For professional care, contact CCSS or your doctor.",
+                urgent_btn_faq: "View general information",
+                urgent_btn_crisis: "Crisis resources & emergency help",
+                
+                // Browse Peers
+                browse_title: "Available Peers",
+                browse_subtitle: "Choose someone to connect with based on their profile.",
+                browse_available: "Available now",
+                browse_no_one: "No one you'd like to talk to?",
+                browse_no_one_text: "You can leave an offline message and a peer will respond later.",
+                browse_btn_offline: "Leave offline message",
+                
+                // Chat
+                chat_disclaimer_title: "Lived experience, not medical advice:",
+                chat_disclaimer_text: "This person shares their personal experience, not treatment recommendations.",
+                chat_placeholder: "Chat interface would appear here",
+                chat_btn_end: "End conversation",
+                
+                // FAQ
+                faq_title: "General Information",
+                faq_q1: "What happens after an HIV diagnosis?",
+                faq_a1: "HIV is a manageable chronic condition with treatment. With proper medical care, people with HIV live long and healthy lives.",
+                faq_q2: "Is treatment effective?",
+                faq_a2: "Yes. Antiretroviral treatment (ART) is highly effective. With treatment adherence, the viral load can become undetectable (Undetectable = Untransmittable).",
+                faq_btn_talk: "Talk to someone",
+                
+                // Crisis
+                crisis_title: "Crisis Resources",
+                crisis_subtitle: "If you're experiencing an emotional crisis or thoughts of self-harm, these resources can help you immediately.",
+                crisis_emergency: "⚠️ Immediate Emergency:",
+                crisis_emergency_text: "If you're in immediate danger, call 911",
+                crisis_hospital: "National Psychiatric Hospital",
+                crisis_hospital_desc: "24/7 crisis line",
+                crisis_iafa: "Institute on Alcoholism and Drug Dependence (IAFA)",
+                crisis_iafa_desc: "Guidance and emotional support",
+                crisis_btn_home: "Back to home",
+                
+                // Offline Message
+                offline_title: "Leave an Offline Message",
+                offline_subtitle: "A peer volunteer will respond to your message when they're available.",
+                offline_placeholder: "Message form would appear here",
+                offline_btn_send: "Send message",
+                offline_confirm_title: "Message Sent",
+                offline_confirm_text: "Your message has been sent anonymously to our peer volunteers.",
+                offline_code_title: "Your private access code:",
+                offline_code_save: "Save this code to check for responses",
+                offline_btn_home: "Return to home",
+                
+                // Check Message
+                check_title: "Check Your Message",
+                check_subtitle: "Enter the access code you received to check if a peer has responded to your message.",
+                check_placeholder: "Code input would appear here",
+                check_btn_check: "Check for response",
+                
+                // Response
+                response_title: "Peer Response",
+                response_subtitle: "A volunteer has responded to your message.",
+                response_placeholder: "Response would appear here",
+                response_btn_continue: "Continue conversation live",
+                response_btn_home: "Return to home",
+                
+                // Onboarding
+                onboard1_title: "What is this platform?",
+                onboard1_are_title: "✓ What we ARE:",
+                onboard1_are_1: "• A space for emotional support",
+                onboard1_are_2: "• People living with HIV sharing experiences",
+                onboard1_are_3: "• Professionally validated information",
+                onboard1_not_title: "✗ What we ARE NOT:",
+                onboard1_not_1: "• We don't provide diagnoses or medical prescriptions",
+                onboard1_not_2: "• We are not a public social network",
+                onboard1_not_3: "• We don't share profiles or identities",
+                onboard1_btn: "Understood, continue",
+                
+                onboard2_title: "Consent and Agreement",
+                onboard2_important: "Important:",
+                onboard2_important_text: "This platform connects people who share lived experiences. It does not replace professional medical care.",
+                onboard2_check1: "I understand this platform is for emotional support, not medical advice.",
+                onboard2_check2: "I agree to keep conversations respectful and not share personally identifiable information.",
+                onboard2_check3: "I understand conversations are moderated for everyone's safety.",
+                onboard2_btn: "Accept and continue",
+                
+                // Common
+                btn_home: "🏠 Home",
+                btn_back: "← Back",
+                years_old: "years old"
+            },
+            es: {
+                // Landing
+                landing_title: "No estás solo/a en esto",
+                landing_subtitle: "Un espacio seguro y anónimo donde personas que viven con VIH comparten experiencias y se acompañan.",
+                landing_btn_talk: "Hablar con alguien ahora",
+                landing_btn_what: "¿Qué es esta plataforma?",
+                landing_btn_check: "Revisar mensaje offline",
+                trust_anonymous: "🔒 100% Anónimo",
+                trust_anonymous_desc: "No se requieren nombres reales ni información personal.",
+                trust_moderated: "👥 Moderado y Seguro",
+                trust_moderated_desc: "Conversaciones monitoreadas para tu seguridad.",
+                trust_medical: "⚕️ No es consejo médico",
+                trust_medical_desc: "Compartimos experiencias, no diagnósticos ni tratamientos.",
+                
+                // Urgent Support
+                urgent_title: "Apoyo Inmediato",
+                urgent_subtitle: "Te conectaremos de forma anónima con alguien que ha vivido situaciones similares.",
+                urgent_btn_browse: "Ver pares disponibles",
+                urgent_what_happens: "¿Qué sucederá?",
+                urgent_step1: "1. Te conectaremos con una persona disponible",
+                urgent_step2: "2. La conversación es 1:1 y completamente anónima",
+                urgent_step3: "3. Puedes terminar la conversación en cualquier momento",
+                urgent_step4: "4. Tu seguridad es nuestra prioridad",
+                urgent_remember: "Recuerda:",
+                urgent_remember_text: "Los pares comparten experiencias personales, no recomendaciones médicas. Para atención profesional, contacta a la CCSS o tu médico.",
+                urgent_btn_faq: "Ver información general",
+                urgent_btn_crisis: "Recursos de crisis y ayuda de emergencia",
+                
+                // Browse Peers
+                browse_title: "Pares Disponibles",
+                browse_subtitle: "Elige a alguien para conectar según su perfil.",
+                browse_available: "Disponible ahora",
+                browse_no_one: "¿No hay nadie con quien quieras hablar?",
+                browse_no_one_text: "Puedes dejar un mensaje offline y un par responderá después.",
+                browse_btn_offline: "Dejar mensaje offline",
+                
+                // Chat
+                chat_disclaimer_title: "Experiencia vivida, no consejo médico:",
+                chat_disclaimer_text: "Esta persona comparte su experiencia personal, no recomendaciones de tratamiento.",
+                chat_placeholder: "La interfaz de chat aparecería aquí",
+                chat_btn_end: "Terminar conversación",
+                
+                // FAQ
+                faq_title: "Información General",
+                faq_q1: "¿Qué pasa después de un diagnóstico de VIH?",
+                faq_a1: "El VIH es una condición crónica manejable con tratamiento. Con atención médica adecuada, las personas con VIH viven vidas largas y saludables.",
+                faq_q2: "¿Es efectivo el tratamiento?",
+                faq_a2: "Sí. El tratamiento antirretroviral (TAR) es altamente efectivo. Con adherencia al tratamiento, la carga viral puede hacerse indetectable (Indetectable = Intransmisible).",
+                faq_btn_talk: "Hablar con alguien",
+                
+                // Crisis
+                crisis_title: "Recursos de Crisis",
+                crisis_subtitle: "Si estás experimentando una crisis emocional o pensamientos de hacerte daño, estos recursos pueden ayudarte de inmediato.",
+                crisis_emergency: "⚠️ Emergencia Inmediata:",
+                crisis_emergency_text: "Si estás en peligro inmediato, llama al 911",
+                crisis_hospital: "Hospital Nacional Psiquiátrico",
+                crisis_hospital_desc: "Línea de crisis 24/7",
+                crisis_iafa: "Instituto sobre Alcoholismo y Farmacodependencia (IAFA)",
+                crisis_iafa_desc: "Orientación y apoyo emocional",
+                crisis_btn_home: "Volver a inicio",
+                
+                // Offline Message
+                offline_title: "Dejar un Mensaje Offline",
+                offline_subtitle: "Un voluntario par responderá a tu mensaje cuando esté disponible.",
+                offline_placeholder: "El formulario de mensaje aparecería aquí",
+                offline_btn_send: "Enviar mensaje",
+                offline_confirm_title: "Mensaje Enviado",
+                offline_confirm_text: "Tu mensaje ha sido enviado anónimamente a nuestros voluntarios pares.",
+                offline_code_title: "Tu código de acceso privado:",
+                offline_code_save: "Guarda este código para revisar respuestas",
+                offline_btn_home: "Volver a inicio",
+                
+                // Check Message
+                check_title: "Revisar Tu Mensaje",
+                check_subtitle: "Ingresa el código de acceso que recibiste para verificar si un par ha respondido a tu mensaje.",
+                check_placeholder: "La entrada de código aparecería aquí",
+                check_btn_check: "Revisar respuesta",
+                
+                // Response
+                response_title: "Respuesta del Par",
+                response_subtitle: "Un voluntario ha respondido a tu mensaje.",
+                response_placeholder: "La respuesta aparecería aquí",
+                response_btn_continue: "Continuar conversación en vivo",
+                response_btn_home: "Volver a inicio",
+                
+                // Onboarding
+                onboard1_title: "¿Qué es esta plataforma?",
+                onboard1_are_title: "✓ Lo que SÍ somos:",
+                onboard1_are_1: "• Espacio de acompañamiento emocional",
+                onboard1_are_2: "• Personas que viven con VIH compartiendo experiencias",
+                onboard1_are_3: "• Información validada profesionalmente",
+                onboard1_not_title: "✗ Lo que NO somos:",
+                onboard1_not_1: "• No damos diagnósticos ni recetas médicas",
+                onboard1_not_2: "• No somos una red social pública",
+                onboard1_not_3: "• No compartimos perfiles ni identidades",
+                onboard1_btn: "Entendido, continuar",
+                
+                onboard2_title: "Consentimiento y Acuerdo",
+                onboard2_important: "Importante:",
+                onboard2_important_text: "Esta plataforma conecta personas que comparten experiencias vividas. No sustituye atención médica profesional.",
+                onboard2_check1: "Entiendo que esta plataforma es para acompañamiento emocional, no para consejo médico.",
+                onboard2_check2: "Acepto mantener conversaciones respetuosas y no compartir información personal identificable.",
+                onboard2_check3: "Entiendo que las conversaciones son moderadas para seguridad de todos/as.",
+                onboard2_btn: "Aceptar y continuar",
+                
+                // Common
+                btn_home: "🏠 Inicio",
+                btn_back: "← Atrás",
+                years_old: "años"
+            }
+        };
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            updateAllText();
+            
+            // Update all language selectors
+            document.querySelectorAll('.language-selector').forEach(select => {
+                select.value = lang;
+            });
+            
+            // Save preference
+            localStorage.setItem('preferred_language', lang);
+        }
+
+        function updateAllText() {
+            const t = translations[currentLanguage];
+            
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    // Preserve HTML structure for elements that might have nested content
+                    if (element.children.length === 0) {
+                        element.textContent = t[key];
+                    } else {
+                        // For elements with children, only update text nodes
+                        element.childNodes.forEach(node => {
+                            if (node.nodeType === Node.TEXT_NODE && node.textContent.trim()) {
+                                node.textContent = t[key];
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
+        // Navigation function
+        function navigate(screenId) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show target screen
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load saved language preference
+            const savedLang = localStorage.getItem('preferred_language');
+            if (savedLang && translations[savedLang]) {
+                switchLanguage(savedLang);
+            }
+        });
+    </script>
+</body>
+</html>

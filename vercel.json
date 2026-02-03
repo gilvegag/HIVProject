@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "wireframes.html",
+      "src": "wireframes-bilingual-complete.html",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/",
-      "dest": "/wireframes.html"
+      "dest": "/wireframes-bilingual-complete.html"
     }
   ]
 }
