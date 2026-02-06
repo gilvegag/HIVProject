@@ -25,12 +25,11 @@ export default function LaFuenteApp() {
   // Chat data - con peer ficticio para testing
   const [availablePeers, setAvailablePeers] = useState<Peer[]>([
     {
-      userId: 'demo-user-123',
+      id: 'demo-user-123',
       username: 'Luna27',
       age: 28,
       province: 'San José',
-      avatar: '🌙',
-      socketId: 'demo-socket'
+      avatar: '🌙'
     }
   ]);
   const [selectedPeer, setSelectedPeer] = useState<Peer | null>(null);
@@ -117,7 +116,7 @@ export default function LaFuenteApp() {
     console.log('🎯 Selected peer:', peer);
     
     // Si es el peer de demo, simular el inicio de chat
-    if (peer.userId === 'demo-user-123') {
+    if (peer.id === 'demo-user-123') {
       setSelectedPeer(peer);
       setConversationId('demo-conversation-123');
       setMessages([]);
@@ -128,15 +127,15 @@ export default function LaFuenteApp() {
         setMessages([{
           id: 'demo-msg-1',
           conversationId: 'demo-conversation-123',
-          senderId: peer.userId,
-          userId: peer.userId,
+          senderId: peer.id,
+          userId: peer.id,
           message: 'Hola! 👋 Gracias por conectar. ¿Cómo estás hoy?',
           timestamp: Date.now()
         }]);
       }, 1000);
     } else {
       // Peer real - usar socket
-      socketClient.requestChat(peer.userId);
+      socketClient.requestChat(peer.id);
     }
   }
 

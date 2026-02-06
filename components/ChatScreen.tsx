@@ -166,7 +166,7 @@ export function ChatScreen({
           </div>
         ) : (
           messages.map((msg, idx) => {
-            const isMe = msg.senderId !== peer.userId; // Si no es el peer, soy yo
+            const isMe = msg.senderId !== peer.id; // Si no es el peer, soy yo
             return (
               <div
                 key={idx}

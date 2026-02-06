@@ -141,7 +141,7 @@ export function PeerBrowser({ peers, onSelectPeer, onBack }: PeerBrowserProps) {
             ) : (
               filteredPeers.map((peer) => (
                 <div
-                  key={peer.userId}
+                  key={peer.id}
                   onClick={() => onSelectPeer(peer)}
                   style={{
                     display: 'flex',

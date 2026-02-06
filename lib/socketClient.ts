@@ -6,6 +6,8 @@ import { io, Socket } from 'socket.io-client';
 
 export interface Message {
   id: string;
+  conversationId: string;
+  senderId: string;
   userId: string;
   message: string;
   timestamp: number;
