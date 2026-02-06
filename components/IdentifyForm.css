@@ -1,0 +1,11 @@
+/* Responsive adjustments for IdentifyForm */
+@media (max-width: 768px) {
+  .identify-form-wrapper {
+    width: 100% !important;
+    max-width: 359px !important;
+  }
+  
+  .identify-form-card {
+    width: 100% !important;
+  }
+}

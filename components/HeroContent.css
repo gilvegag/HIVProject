@@ -1,0 +1,35 @@
+/* Responsive adjustments for HeroContent */
+@media (max-width: 1024px) {
+  .hero-container {
+    flex-direction: column !important;
+    gap: 32px !important;
+  }
+  
+  .hero-text {
+    flex: 1 !important;
+    min-width: auto !important;
+  }
+  
+  .hero-illustration {
+    width: 100% !important;
+    max-width: 665px !important;
+    height: auto !important;
+    min-height: 200px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 36px !important;
+    line-height: 40px !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+  
+  .hero-illustration {
+    min-height: 150px !important;
+  }
+}

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HIV Peer Support Platform - Reshaped Design System</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Reshaped CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/reshaped/themes/reshaped/theme.css">
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+        }
+        #root {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        .phone-container {
+            max-width: 375px;
+            width: 100%;
+            min-height: 667px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+
+        // Main App Component
+        function App() {
+            const [currentScreen, setCurrentScreen] = useState('landing');
+            const [selectedPeer, setSelectedPeer] = useState(null);
+
+            const navigate = (screen) => {
+                setCurrentScreen(screen);
+                window.scrollTo(0, 0);
+            };
+
+            const selectPeer = (peer) => {
+                setSelectedPeer(peer);
+            };
+
+            return (
+                <div className="phone-container">
+                    {currentScreen === 'landing' && <LandingScreen navigate={navigate} />}
+                    {currentScreen === 'onboarding-1' && <Onboarding1 navigate={navigate} />}
+                    {currentScreen === 'onboarding-2' && <Onboarding2 navigate={navigate} />}
+                    {currentScreen === 'onboarding-3' && <Onboarding3 navigate={navigate} />}
+                    {currentScreen === 'onboarding-4' && <Onboarding4 navigate={navigate} />}
+                    {currentScreen === 'urgent-support' && <UrgentSupport navigate={navigate} />}
+                    {currentScreen === 'browse-peers' && <BrowsePeers navigate={navigate} selectPeer={selectPeer} />}
+                    {currentScreen === 'chat' && <ChatScreen navigate={navigate} peer={selectedPeer} />}
+                    {currentScreen === 'faq' && <FAQScreen navigate={navigate} />}
+                    {currentScreen === 'no-peer' && <NoPeerScreen navigate={navigate} />}
+                    {currentScreen === 'offline-message' && <OfflineMessage navigate={navigate} />}
+                    {currentScreen === 'offline-confirmation' && <OfflineConfirmation navigate={navigate} />}
+                    {currentScreen === 'check-message' && <CheckMessage navigate={navigate} />}
+                    {currentScreen === 'crisis' && <CrisisResources navigate={navigate} />}
+                </div>
+            );
+        }
+
+        // Landing Screen
+        function LandingScreen({ navigate }) {
+            return (
+                <div style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '40px', paddingBottom: '20px', borderBottom: '1px solid #e5e5e5' }}>
+                        <select style={{ padding: '8px 12px', border: '1px solid #999', borderRadius: '4px', fontSize: '14px' }}>
+                            <option>EN</option>
+                            <option>ES</option>
+                        </select>
+                    </div>
+
+                    <div style={{ marginTop: '60px' }}>
+                        <h1 style={{ fontSize: '32px', fontWeight: '700', marginBottom: '16px', lineHeight: '1.3', color: '#1a1a1a' }}>
+                            You're not alone in this
+                        </h1>
+                        <p style={{ fontSize: '16px', color: '#666', marginBottom: '30px', lineHeight: '1.5' }}>
+                            A safe and anonymous space where people living with HIV share experiences and support each other.
+                        </p>
+
+                        <button 
+                            onClick={() => navigate('urgent-support')}
+                            style={{
+                                width: '100%',
+                                padding: '20px',
+                                marginBottom: '12px',
+                                border: 'none',
+                                borderRadius: '8px',
+                                background: '#1a1a1a',
+                                color: 'white',
+                                fontSize: '18px',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Talk to someone now
+                        </button>
+                        
+                        <button 
+                            onClick={() => navigate('onboarding-1')}
+                            style={{
+                                width: '100%',
+                                padding: '16px',
+                                marginBottom: '12px',
+                                border: '2px solid #1a1a1a',
+                                borderRadius: '8px',
+                                background: 'white',
+                                color: '#1a1a1a',
+                                fontSize: '16px',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            What is this platform?
+                        </button>
+
+                        <button 
+                            onClick={() => navigate('check-message')}
+                            style={{
+                                width: '100%',
+                                padding: '16px',
+                                border: '2px solid #1a1a1a',
+                                borderRadius: '8px',
+                                background: 'white',
+                                color: '#1a1a1a',
+                                fontSize: '16px',
+                                fontWeight: '600',
+                                cursor: 'pointer'
+                            }}
+                        >
+                            Check offline message
+                        </button>
+                    </div>
+
+                    <div style={{ marginTop: '40px', padding: '20px', background: '#f9f9f9', borderRadius: '8px' }}>
+                        <TrustItem icon="🔒" title="100% Anonymous" text="No real names or personal information required." />
+                        <TrustItem icon="👥" title="Moderated and Safe" text="Conversations monitored for your safety." />
+                        <TrustItem icon="⚕️" title="Not medical advice" text="We share experiences, not diagnoses or treatments." />
+                    </div>
+                </div>
+            );
+        }
+
+        function TrustItem({ icon, title, text }) {
+            return (
+                <div style={{ marginBottom: '15px', paddingBottom: '15px', borderBottom: '1px solid #e5e5e5' }}>
+                    <div style={{ fontWeight: '600', marginBottom: '5px', fontSize: '14px' }}>
+                        {icon} {title}
+                    </div>
+                    <div style={{ fontSize: '13px', color: '#666' }}>{text}</div>
+                </div>
+            );
+        }
+
+        // Browse Peers Screen
+        function BrowsePeers({ navigate, selectPeer }) {
+            const peers = [
+                { username: 'Luna27', age: 27, province: 'San José', avatar: '🌙', id: 1 },
+                { username: 'Esperanza_CR', age: 34, province: 'Heredia', avatar: '🦋', id: 2 },
+                { username: 'Carlos_Tico', age: 41, province: 'Puntarenas', avatar: '🌊', id: 3 },
+                { username: 'Mariposa88', age: 29, province: 'Alajuela', avatar: '🌸', id: 4 },
+                { username: 'SolCaribe', age: 38, province: 'Limón', avatar: '☀️', id: 5 },
+                { username: 'Pacifico_Azul', age: 45, province: 'Guanacaste', avatar: '🌴', id: 6 }
+            ];
+
+            return (
+                <div style={{ padding: '20px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                        <button onClick={() => navigate('landing')} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer' }}>
+                            🏠
+                        </button>
+                    </div>
+
+                    <button onClick={() => navigate('urgent-support')} style={{ background: 'none', border: 'none', marginBottom: '20px', fontSize: '16px', cursor: 'pointer' }}>
+                        ← Back
+                    </button>
+
+                    <h2 style={{ fontSize: '28px', fontWeight: '700', marginBottom: '8px' }}>Available Peers</h2>
+                    <p style={{ fontSize: '16px', color: '#666', marginBottom: '20px' }}>
+                        Choose someone to connect with based on their profile.
+                    </p>
+
+                    <div style={{ marginBottom: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '8px' }}>
+                        <div style={{ fontSize: '12px', textTransform: 'uppercase', color: '#888', marginBottom: '10px' }}>Filter by:</div>
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            <select style={{ flex: 1, padding: '10px', border: '1px solid #999', borderRadius: '4px' }}>
+                                <option>All provinces</option>
+                                <option>San José</option>
+                                <option>Heredia</option>
+                                <option>Alajuela</option>
+                            </select>
+                            <select style={{ flex: 1, padding: '10px', border: '1px solid #999', borderRadius: '4px' }}>
+                                <option>All ages</option>
+                                <option>18-25</option>
+                                <option>26-35</option>
+                                <option>36-45</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    {peers.map(peer => (
+                        <div 
+                            key={peer.id}
+                            onClick={() => { selectPeer(peer); navigate('chat'); }}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                padding: '15px',
+                                border: '2px solid #e5e5e5',
+                                borderRadius: '8px',
+                                marginBottom: '12px',
+                                cursor: 'pointer',
+                                transition: 'all 0.2s'
+                            }}
+                        >
+                            <div style={{ 
+                                width: '50px', 
+                                height: '50px', 
+                                background: '#f0f0f0', 
+                                borderRadius: '50%', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center', 
+                                fontSize: '24px',
+                                marginRight: '15px'
+                            }}>
+                                {peer.avatar}
+                            </div>
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '600', fontSize: '16px', marginBottom: '4px' }}>{peer.username}</div>
+                                <div style={{ fontSize: '13px', color: '#666', marginBottom: '4px' }}>
+                                    {peer.age} years old • {peer.province}
+                                </div>
+                                <div style={{ fontSize: '12px', color: '#4CAF50', display: 'flex', alignItems: 'center', gap: '5px' }}>
+                                    <span style={{ width: '8px', height: '8px', background: '#4CAF50', borderRadius: '50%' }}></span>
+                                    Available now
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div style={{ marginTop: '30px', padding: '15px', background: '#f0f0f0', borderRadius: '4px', fontSize: '13px' }}>
+                        <strong>No one you'd like to talk to?</strong><br />
+                        You can leave an offline message and a peer will respond later.
+                    </div>
+
+                    <button 
+                        onClick={() => navigate('offline-message')}
+                        style={{
+                            width: '100%',
+                            padding: '16px',
+                            marginTop: '15px',
+                            border: '2px solid #1a1a1a',
+                            borderRadius: '8px',
+                            background: 'white',
+                            fontSize: '16px',
+                            fontWeight: '600',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        Leave offline message
+                    </button>
+                </div>
+            );
+        }
+
+        // Additional screens simplified for demo
+        function Onboarding1({ navigate }) {
+            return <div style={{padding: '20px'}}><h2>Onboarding Step 1</h2><button onClick={() => navigate('onboarding-2')}>Continue</button></div>;
+        }
+
+        function Onboarding2({ navigate }) {
+            return <div style={{padding: '20px'}}><h2>What is this platform?</h2><button onClick={() => navigate('onboarding-3')}>Continue</button></div>;
+        }
+
+        function Onboarding3({ navigate }) {
+            return <div style={{padding: '20px'}}><h2>Help us understand</h2><button onClick={() => navigate('onboarding-4')}>Continue</button></div>;
+        }
+
+        function Onboarding4({ navigate }) {
+            return <div style={{padding: '20px'}}><h2>Consent</h2><button onClick={() => navigate('urgent-support')}>Accept</button></div>;
+        }
+
+        function UrgentSupport({ navigate }) {
+            return (
+                <div style={{padding: '20px'}}>
+                    <button onClick={() => navigate('landing')}>🏠</button>
+                    <h2>Immediate Support</h2>
+                    <button onClick={() => navigate('browse-peers')} style={{width: '100%', padding: '20px', background: '#1a1a1a', color: 'white', border: 'none', borderRadius: '8px', fontSize: '18px', fontWeight: '600'}}>
+                        Browse available peers
+                    </button>
+                </div>
+            );
+        }
+
+        function ChatScreen({ navigate, peer }) {
+            return (
+                <div style={{padding: '20px'}}>
+                    <button onClick={() => navigate('landing')}>🏠</button>
+                    <h3>Chat with {peer?.username || 'Luna27'}</h3>
+                    <div style={{height: '400px', background: '#fafafa', padding: '15px', marginBottom: '15px', borderRadius: '8px'}}>
+                        <div style={{background: '#e5e5e5', padding: '10px', borderRadius: '4px', marginBottom: '10px'}}>
+                            Hi! How are you feeling today?
+                        </div>
+                    </div>
+                    <input type="text" placeholder="Type your message..." style={{width: '100%', padding: '12px', border: '2px solid #1a1a1a', borderRadius: '4px'}} />
+                </div>
+            );
+        }
+
+        function FAQScreen({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>FAQ</h2></div>;
+        }
+
+        function NoPeerScreen({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>No peers available</h2></div>;
+        }
+
+        function OfflineMessage({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>Leave Offline Message</h2></div>;
+        }
+
+        function OfflineConfirmation({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>Message Sent</h2></div>;
+        }
+
+        function CheckMessage({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>Check Your Message</h2></div>;
+        }
+
+        function CrisisResources({ navigate }) {
+            return <div style={{padding: '20px'}}><button onClick={() => navigate('landing')}>🏠</button><h2>Crisis Resources</h2></div>;
+        }
+
+        // Render App
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>
